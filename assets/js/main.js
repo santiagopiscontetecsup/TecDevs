@@ -9,6 +9,89 @@
 (function () {
   "use strict";
 
+  // Módulo para cargar detalles del proyecto
+  function loadProjectDetails() {
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        id: params.get('id')
+      };
+    }
+
+    const queryParams = getQueryParams();
+    const projectId = queryParams.id;
+
+    // Datos de ejemplo de proyectos (en un caso real, esto puede venir de una API o un archivo JSON)
+    const projects = {
+      tecsana: {
+        title: "Tecsana",
+        description: "Página web para gestión de clínica médica. Incluye portal de pacientes con reserva de citas online, acceso a historiales médicos y una interfaz para que los médicos registren consultas y recetas. Diseño moderno y funcional con énfasis en la experiencia del usuario y la seguridad de la información médica.",
+        url: "http://tecsana.com",
+        images: [
+          "assets/img/masonry-portfolio/web-tecsana.png",
+          "assets/img/masonry-portfolio/web-tecsana2.png",
+          "assets/img/masonry-portfolio/web-tecsana3.png"
+        ]
+      },
+      gassmart: {
+        title: "GasSmart",
+        description: "Página web de datos estadísticos para distribuidores de gas. Los usuarios pueden acceder a informes detallados sobre la demanda de gas en diferentes regiones, precios de mercado, tendencias de consumo y más.",
+        url: "http://gassmart.com",
+        images: [
+          "assets/img/masonry-portfolio/web-gassmart.png",
+          "assets/img/masonry-portfolio/web-gassmart2.png"
+        ]
+      },
+      lacubeta: {
+        title: "La Cubeta",
+        description: "Sitio web interactivo para una licorería, que permite a los clientes consultar precios de productos con un solo clic. Al seleccionar el botón de compra, los usuarios son dirigidos directamente al WhatsApp personal de la licorería para una atención inmediata y personalizada. Además, el sitio web proporciona la ubicación exacta del local y enlaces directos a sus perfiles en Instagram, Facebook y WhatsApp, facilitando la interacción y el acceso a la información para los clientes.",
+        url: "http://lacubeta.com",
+        images: [
+          "assets/img/masonry-portfolio/web-lacubeta.png",
+          "assets/img/masonry-portfolio/web-lacubeta2.png"
+        ]
+      },
+      flarppyshop: {
+        title: "Flarppy Shop",
+        description: "Página web de compra y venta de articulos. En esta página web se pueden encontrar productos de diferentes categorías, como ropa, accesorios, tecnología, entre otros. Los usuarios pueden registrarse, iniciar sesión, agregar productos a su carrito de compras y realizar pagos en línea. Además, los vendedores pueden crear una cuenta y publicar sus productos para que los usuarios interesados puedan comprarlos. La página web también cuenta con un sistema de calificación y comentarios para que los usuarios puedan compartir sus opiniones sobre los productos y la experiencia de compra.",
+        url: "http://flarppyshop.com",
+        images: [
+          "assets/img/masonry-portfolio/web-flarppyshop.png",
+          "assets/img/masonry-portfolio/web-flarppyshop2.png",
+          "assets/img/masonry-portfolio/web-flarppyshop3.png"
+        ]
+      }
+    };
+
+    const project = projects[projectId];
+
+    if (project) {
+      // Actualiza el contenido de la página con los detalles del proyecto
+      document.querySelector('.portfolio-description h2').innerText = project.title;
+      document.querySelector('.portfolio-description p').innerText = project.description;
+
+      // Actualiza el slider con las imágenes del proyecto
+      const sliderWrapper = document.querySelector('.swiper-wrapper');
+      sliderWrapper.innerHTML = project.images.map(image => `
+        <div class="swiper-slide">
+          <img src="${image}" alt="${project.title}">
+        </div>
+      `).join('');
+
+      // Reinicia Swiper (si es necesario)
+      if (window.Swiper) {
+        new Swiper('.portfolio-details-slider', JSON.parse(document.querySelector('.swiper-config').textContent));
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Llamada a la función de carga de detalles del proyecto
+    if (document.querySelector('.portfolio-details-slider')) {
+      loadProjectDetails();
+    }
+  });
+
   /**
    * Apply .scrolled class to the body as the page is scrolled down
    */
@@ -167,10 +250,12 @@
   /**
    * Init isotope layout and filters
    */
-  document.querySelectorAll(".isotope-layout").forEach(function (isotopeItem) {
-    let layout = isotopeItem.getAttribute("data-layout") ?? "masonry";
-    let filter = isotopeItem.getAttribute("data-default-filter") ?? "*";
-    let sort = isotopeItem.getAttribute("data-sort") ?? "original-order";
+
+  document.querySelectorAll('.isotope-layout').forEach(function(isotopeItem) {
+    let layout = isotopeItem.getAttribute('data-layout') ?? 'fitRows';
+    let filter = isotopeItem.getAttribute('data-default-filter') ?? '*';
+    let sort = isotopeItem.getAttribute('data-sort') ?? 'original-order';
+
 
     let initIsotope;
     imagesLoaded(isotopeItem.querySelector(".isotope-container"), function () {
